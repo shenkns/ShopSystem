@@ -124,14 +124,27 @@ bool UShopManager::IsItemAllowedInCategory(UShopItem* Item, UShopCategoryData* C
 {
 	if(!Item || !Category) return false;
 
-	if(Category->AllowedItemClasses.Num() == 0) return true;
-	
-	for(const TSubclassOf<UShopItem> AllowedClass : Category->AllowedItemClasses)
+	if(Category->AllowedItemClasses.Num() > 0)
 	{
-		if(Item->GetClass()->IsChildOf(AllowedClass)) return true;
+		for(const TSubclassOf<UShopItem> AllowedClass : Category->AllowedItemClasses)
+		{
+			if(Item->GetClass()->IsChildOf(AllowedClass) || Item->GetClass() == AllowedClass) break;
+		}
+
+		return false;
 	}
 
-	return false;
+	if(Category->AllowedItemData.Num() > 0)
+	{
+		for(const UShopItemData* AllowedData : Category->AllowedItemData)
+		{
+			if(Item->GetShopData<UShopItemData>() == AllowedData) break;
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 TArray<UShopItem*> UShopManager::GetShopItems(TSubclassOf<UShopItem> Class) const
