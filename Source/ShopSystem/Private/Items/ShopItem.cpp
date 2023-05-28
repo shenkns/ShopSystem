@@ -25,6 +25,11 @@ void UShopItem::PostInitProperties()
 	}
 }
 
+void UShopItem::Init_Implementation()
+{
+	
+}
+
 UManagersSystem* UShopItem::GetManagersSystem() const
 {
 	return Cast<UManagersSystem>(GetOuter()->GetOuter());

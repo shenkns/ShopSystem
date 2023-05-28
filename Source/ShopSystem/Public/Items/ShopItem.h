@@ -49,6 +49,9 @@ public:
 
 	virtual void PostInitProperties() override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shop")
+	virtual void Init();
+
 	UFUNCTION(BlueprintPure, Category = "Managers", meta = (CompactNodeTitle = "System"))
 	UManagersSystem* GetManagersSystem() const;
 
