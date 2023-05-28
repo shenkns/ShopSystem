@@ -17,5 +17,27 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
+	],
+	"Plugins": [
+		{
+			"Name": "LogSystem",
+			"Enabled": true
+		},
+		{
+			"Name": "ManagersSystem",
+			"Enabled": true
+		},
+		{
+			"Name": "DataSystem",
+			"Enabled": true
+		},
+		{
+			"Name": "SaveLoadSystem",
+			"Enabled": true
+		},
+		{
+			"Name": "CurrenciesSystem",
+			"Enabled": true
+		}
 	]
 }

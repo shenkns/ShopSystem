@@ -25,7 +25,23 @@ public class ShopSystem : ModuleRules
 			new string[]
 			{
 				"CoreUObject",
-				"Engine"
+				"Engine",
+				"LogSystem",
+				"ManagersSystem",
+				"SaveLoadSystem",
+				"DataSystem",
+				"CurrenciesSystem"
+			}
+		);
+		
+		PrivateIncludePathModuleNames.AddRange(
+			new string[]
+			{
+				"LogSystem",
+				"ManagersSystem",
+				"SaveLoadSystem",
+				"DataSystem",
+				"CurrenciesSystem"
 			}
 		);
 	}
