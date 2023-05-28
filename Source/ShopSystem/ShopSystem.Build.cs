@@ -30,7 +30,8 @@ public class ShopSystem : ModuleRules
 				"ManagersSystem",
 				"SaveLoadSystem",
 				"DataSystem",
-				"CurrenciesSystem"
+				"CurrenciesSystem",
+				"SerializationSystem"
 			}
 		);
 		
@@ -41,7 +42,8 @@ public class ShopSystem : ModuleRules
 				"ManagersSystem",
 				"SaveLoadSystem",
 				"DataSystem",
-				"CurrenciesSystem"
+				"CurrenciesSystem",
+				"SerializationSystem"
 			}
 		);
 	}

@@ -38,6 +38,10 @@
 		{
 			"Name": "CurrenciesSystem",
 			"Enabled": true
+		},
+		{
+			"Name": "SerializationSystem",
+			"Enabled": true
 		}
 	]
 }

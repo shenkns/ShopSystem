@@ -73,12 +73,12 @@ void UShopItem::Finish_Implementation()
 
 bool UShopItem::Apply_Implementation()
 {
-	return false;
+	return true;
 }
 
 bool UShopItem::Refund_Implementation()
 {
-	return false;
+	return true;
 }
 
 
