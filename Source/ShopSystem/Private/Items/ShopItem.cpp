@@ -66,7 +66,7 @@ void UShopItem::Buy_Implementation()
 	UCurrencyStat* CurrencyStat = StatsManager->GetStat<UCurrencyStat>();
 	if(!CurrencyStat) return;
 	
-	FinishPurchase(CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice()));
+	FinishPurchase(!GetCurrency() || CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice()));
 
 	StatsManager->SaveStats();
 }
