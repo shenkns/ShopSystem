@@ -2,9 +2,12 @@
 
 #include "Managers/ShopManager.h"
 
+#include "ManagersSystem.h"
 #include "Data/ShopCategoryData.h"
+#include "Managers/StatsManager.h"
 #include "Module/ShopSystemSettings.h"
 #include "Module/ShopSystemModule.h"
+#include "Stats/StatShopHistory.h"
 
 void UShopManager::InitManager()
 {
@@ -236,18 +239,44 @@ void UShopManager::ProcessPurchaseFailed(UShopItem* Item)
 
 void UShopManager::ProcessPurchaseApplied(UShopItem* Item)
 {
+	if(!Item) return;
+	
 	// Unbind Item Delegates
 	Item->OnItemApplied.RemoveDynamic(this, &UShopManager::ProcessPurchaseApplied);
 	Item->OnItemRefunded.RemoveDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 	
 	OnItemApplied.Broadcast(Item);
+
+	const UManagersSystem* ManagersSystem = GetManagerSystem();
+	if(!ManagersSystem) return;
+
+	const UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
+	if(!StatsManager) return;
+
+	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
+	if(!StatShopHistory) return;
+
+	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Purchased);
 }
 
 void UShopManager::ProcessPurchaseRefunded(UShopItem* Item)
 {
+	if(!Item) return;
+	
 	// Unbind Item Delegates
 	Item->OnItemApplied.RemoveDynamic(this, &UShopManager::ProcessPurchaseApplied);
 	Item->OnItemRefunded.RemoveDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 	
 	OnItemRefunded.Broadcast(Item);
+
+	const UManagersSystem* ManagersSystem = GetManagerSystem();
+	if(!ManagersSystem) return;
+
+	const UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
+	if(!StatsManager) return;
+
+	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
+	if(!StatShopHistory) return;
+
+	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Refunded);
 }
