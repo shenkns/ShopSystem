@@ -250,13 +250,15 @@ void UShopManager::ProcessPurchaseApplied(UShopItem* Item)
 	const UManagersSystem* ManagersSystem = GetManagerSystem();
 	if(!ManagersSystem) return;
 
-	const UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
+	UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
 	if(!StatsManager) return;
 
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
 	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Purchased);
+	
+	StatsManager->SaveStats();
 }
 
 void UShopManager::ProcessPurchaseRefunded(UShopItem* Item)
@@ -272,11 +274,13 @@ void UShopManager::ProcessPurchaseRefunded(UShopItem* Item)
 	const UManagersSystem* ManagersSystem = GetManagerSystem();
 	if(!ManagersSystem) return;
 
-	const UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
+	UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
 	if(!StatsManager) return;
 
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
 	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Refunded);
+	
+	StatsManager->SaveStats();
 }
