@@ -109,15 +109,20 @@ void UShopItem::FinishPurchase(bool Result)
 	if(Result)
 	{
 		const bool ApplyResult = ApplyPurchase();
+		
 		if(ApplyResult)
 		{
-			Finish();
 			OnItemBought.Broadcast(this);
-			return;
 		}
+
+		Finish();
+
+		return;
 	}
 	
 	OnItemBuyFailed.Broadcast(this);
+
+	Finish();
 }
 
 bool UShopItem::ApplyPurchase()
