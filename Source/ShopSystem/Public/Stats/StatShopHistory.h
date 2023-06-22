@@ -4,6 +4,8 @@
 
 #include "Stats/Stat.h"
 
+#include "Items/ShopItem.h"
+
 #include "StatShopHistory.generated.h"
 
 class UShopItemData;
@@ -17,9 +19,12 @@ enum EOperationType
 };
 
 USTRUCT(BlueprintType)
-struct FPurchaseData
+struct SHOPSYSTEM_API FPurchaseData
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
+	TSubclassOf<UShopItem> ShopItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
 	UShopItemData* ShopItem;
@@ -30,7 +35,11 @@ struct FPurchaseData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
 	TEnumAsByte<EOperationType> OperationType;
 
-	FPurchaseData(UShopItemData* Item = nullptr, FDateTime Time = FDateTime(), TEnumAsByte<EOperationType> Operation = EOperationType::Purchased) :
+	FPurchaseData(TSubclassOf<UShopItem> ItemClass = UShopItem::StaticClass(),
+		UShopItemData* Item = nullptr,
+		FDateTime Time = FDateTime(),
+		TEnumAsByte<EOperationType> Operation = EOperationType::Purchased) :
+	ShopItemClass(ItemClass),
 	ShopItem(Item),
 	PurchaseTime(Time),
 	OperationType(Operation)
@@ -39,9 +48,12 @@ struct FPurchaseData
 };
 
 USTRUCT(BlueprintType)
-struct FPurchaseSaveData
+struct SHOPSYSTEM_API FPurchaseSaveData
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
+	TSoftClassPtr<UShopItem> ShopItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
 	FName ShopItemTag;
@@ -52,7 +64,12 @@ struct FPurchaseSaveData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop|Purchases")
 	TEnumAsByte<EOperationType> OperationType;
 
-	FPurchaseSaveData(FName Item = NAME_None, FDateTime Time = FDateTime(), TEnumAsByte<EOperationType> Operation = EOperationType::Purchased) :
+	FPurchaseSaveData(
+		TSoftClassPtr<UShopItem> ItemClass = UShopItem::StaticClass(),
+		FName Item = NAME_None,
+		FDateTime Time = FDateTime(),
+		TEnumAsByte<EOperationType> Operation = EOperationType::Purchased) :
+	ShopItemClass(ItemClass),
 	ShopItemTag(Item),
 	PurchaseTime(Time),
 	OperationType(Operation)
@@ -88,5 +105,5 @@ public:
 
 protected:
 
-	void RecordPurchase(UShopItemData* ShopItem, TEnumAsByte<EOperationType> OperationType);
+	void RecordPurchase(UShopItem* ShopItem, TEnumAsByte<EOperationType> OperationType);
 };

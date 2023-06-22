@@ -256,7 +256,7 @@ void UShopManager::ProcessPurchaseApplied(UShopItem* Item)
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
-	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Purchased);
+	StatShopHistory->RecordPurchase(Item, EOperationType::Purchased);
 	
 	StatsManager->SaveStats();
 }
@@ -280,7 +280,7 @@ void UShopManager::ProcessPurchaseRefunded(UShopItem* Item)
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
-	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Refunded);
+	StatShopHistory->RecordPurchase(Item, EOperationType::Refunded);
 	
 	StatsManager->SaveStats();
 }
