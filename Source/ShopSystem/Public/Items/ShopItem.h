@@ -59,7 +59,7 @@ public:
 	UShopManager* GetManager() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shop")
-	void Buy();
+	bool Buy();
 
 	// Item Stats Getters
 	UFUNCTION(BlueprintPure, Category = "Shop", meta = (CompactNodeTitle = "Data", DeterminesOutputType = "Class"))

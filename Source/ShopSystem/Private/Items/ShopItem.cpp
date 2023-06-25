@@ -55,20 +55,24 @@ int UShopItem::GetPrice_Implementation() const
 	return ShopData ? ShopData->Price : 0;
 }
 
-void UShopItem::Buy_Implementation()
+bool UShopItem::Buy_Implementation()
 {
 	const UManagersSystem* ManagersSystem = GetManagersSystem();
-	if(!ManagersSystem) return;
+	if(!ManagersSystem) return false;
 
 	UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
-	if(!StatsManager) return;
+	if(!StatsManager) return false;
 
 	UCurrencyStat* CurrencyStat = StatsManager->GetStat<UCurrencyStat>();
-	if(!CurrencyStat) return;
+	if(!CurrencyStat) return false;
+
+	const bool bSuccess = !GetCurrency() || CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice());
 	
-	FinishPurchase(!GetCurrency() || CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice()));
+	FinishPurchase(bSuccess);
 
 	StatsManager->SaveStats();
+
+	return bSuccess;
 }
 
 void UShopItem::Finish_Implementation()
