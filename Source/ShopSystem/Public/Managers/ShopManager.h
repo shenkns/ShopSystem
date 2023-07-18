@@ -83,6 +83,8 @@ public:
 	static bool IsItemAllowedInCategory(UShopItem* Item, UShopCategoryData* Category);
 
 	// Items Getters
+	UFUNCTION(BlueprintPure, Category = "Shop", meta = (CompactNodeTitle = "Categories"))
+	TMap<UShopCategoryData*, FShopItemsList> GetAllCategories() const { return Items; }
 	UFUNCTION(BlueprintPure, Category = "Shop", meta = (CompactNodeTitle = "Items", DeterminesOutputType = "Class"))
 	TArray<UShopItem*> GetShopItems(TSubclassOf<UShopItem> Class) const;
 
