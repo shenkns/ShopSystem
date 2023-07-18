@@ -98,7 +98,9 @@ bool UShopManager::AddItemToCategory(UShopItem* Item, UShopCategoryData* Categor
 
 	// Add To Category List
 	FShopItemsList& CategoryItems = Items.FindOrAdd(Category);
+	
 	Item->Rename(nullptr, this);
+	Item->Init();
 	CategoryItems.Items.Add(Item);
 
 	DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "%s Added To %s", *Item->GetName(), *Category->GetName())
