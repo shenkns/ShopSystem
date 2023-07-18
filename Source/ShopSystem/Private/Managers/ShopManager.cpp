@@ -56,7 +56,14 @@ void UShopManager::ValidateAllowedItemsInCategories()
 		{
 			UShopItem* Item = Pair.Value.Items[i];
 
-			if(!IsItemAllowedInCategory(Item, Pair.Key)) Pair.Value.Items.Remove(Item);
+			if(IsItemAllowedInCategory(Item, Pair.Key))
+			{
+				Item->Init();
+			}
+			else
+			{
+				Pair.Value.Items.Remove(Item);
+			}
 		}
 	}
 }
