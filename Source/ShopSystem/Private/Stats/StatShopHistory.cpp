@@ -68,7 +68,7 @@ FPurchaseSaveData UStatShopHistory::ToPurchaseSaveData(FPurchaseData PurchaseDat
 
 FPurchaseData UStatShopHistory::FromPurchaseSaveData(const FPurchaseSaveData PurchaseSaveData, const UObject* WorldContext)
 {
-	const UManagersSystem* ManagersSystem = UManagersSystem::Get(WorldContext);
+	const UManagersSystem* ManagersSystem = UManagersSystem::GetWithContext(WorldContext);
 	if(!ManagersSystem)
 	{
 		return FPurchaseData(UShopItem::StaticClass(),
