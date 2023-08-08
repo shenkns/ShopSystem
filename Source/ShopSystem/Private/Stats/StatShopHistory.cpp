@@ -16,7 +16,7 @@ TArray<FPurchaseData> UStatShopHistory::GetAllPurchases(TSubclassOf<UShopItemDat
 
 	TArray<FPurchaseData> AllPurchases;
 
-	for(const FPurchaseSaveData PurchaseSaveData : Purchases)
+	for(const FPurchaseSaveData& PurchaseSaveData : Purchases)
 	{
 		FPurchaseData Purchase = FromPurchaseSaveData(PurchaseSaveData, this);
 		if(!Purchase.ShopItem) continue;
@@ -40,7 +40,7 @@ TArray<FPurchaseData> UStatShopHistory::GetAllPurchasesInPeriod(TSubclassOf<USho
 
 	TArray<FPurchaseData> AllPurchases;
 
-	for(const FPurchaseSaveData PurchaseSaveData : Purchases)
+	for(const FPurchaseSaveData& PurchaseSaveData : Purchases)
 	{
 		FPurchaseData Purchase = FromPurchaseSaveData(PurchaseSaveData, this);
 		if(!Purchase.ShopItem) continue;
