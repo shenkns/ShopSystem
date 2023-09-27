@@ -59,7 +59,7 @@ public:
 	UShopManager* GetManager() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shop")
-	void Buy();
+	bool Buy();
 
 	// Item Stats Getters
 	UFUNCTION(BlueprintPure, Category = "Shop", meta = (CompactNodeTitle = "Data", DeterminesOutputType = "Class"))
@@ -95,7 +95,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
 	bool Refund();
 
+	UFUNCTION(BlueprintCallable, Category = "Shop")
 	void FinishPurchase(bool Result);
+	
 	bool ApplyPurchase();
 	bool RefundPurchase(bool ItemGiven);
 };

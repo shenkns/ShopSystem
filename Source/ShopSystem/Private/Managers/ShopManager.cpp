@@ -56,7 +56,14 @@ void UShopManager::ValidateAllowedItemsInCategories()
 		{
 			UShopItem* Item = Pair.Value.Items[i];
 
-			if(!IsItemAllowedInCategory(Item, Pair.Key)) Pair.Value.Items.Remove(Item);
+			if(IsItemAllowedInCategory(Item, Pair.Key))
+			{
+				Item->Init();
+			}
+			else
+			{
+				Pair.Value.Items.Remove(Item);
+			}
 		}
 	}
 }
@@ -91,7 +98,9 @@ bool UShopManager::AddItemToCategory(UShopItem* Item, UShopCategoryData* Categor
 
 	// Add To Category List
 	FShopItemsList& CategoryItems = Items.FindOrAdd(Category);
+	
 	Item->Rename(nullptr, this);
+	Item->Init();
 	CategoryItems.Items.Add(Item);
 
 	DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "%s Added To %s", *Item->GetName(), *Category->GetName())
@@ -256,7 +265,7 @@ void UShopManager::ProcessPurchaseApplied(UShopItem* Item)
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
-	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Purchased);
+	StatShopHistory->RecordPurchase(Item, EOperationType::Purchased);
 	
 	StatsManager->SaveStats();
 }
@@ -280,7 +289,7 @@ void UShopManager::ProcessPurchaseRefunded(UShopItem* Item)
 	UStatShopHistory* StatShopHistory = StatsManager->GetStat<UStatShopHistory>();
 	if(!StatShopHistory) return;
 
-	StatShopHistory->RecordPurchase(Item->GetShopData<UShopItemData>(), EOperationType::Refunded);
+	StatShopHistory->RecordPurchase(Item, EOperationType::Refunded);
 	
 	StatsManager->SaveStats();
 }

@@ -16,7 +16,7 @@ TArray<FPurchaseData> UStatShopHistory::GetAllPurchases(TSubclassOf<UShopItemDat
 
 	TArray<FPurchaseData> AllPurchases;
 
-	for(const FPurchaseSaveData PurchaseSaveData : Purchases)
+	for(const FPurchaseSaveData& PurchaseSaveData : Purchases)
 	{
 		FPurchaseData Purchase = FromPurchaseSaveData(PurchaseSaveData, this);
 		if(!Purchase.ShopItem) continue;
@@ -40,7 +40,7 @@ TArray<FPurchaseData> UStatShopHistory::GetAllPurchasesInPeriod(TSubclassOf<USho
 
 	TArray<FPurchaseData> AllPurchases;
 
-	for(const FPurchaseSaveData PurchaseSaveData : Purchases)
+	for(const FPurchaseSaveData& PurchaseSaveData : Purchases)
 	{
 		FPurchaseData Purchase = FromPurchaseSaveData(PurchaseSaveData, this);
 		if(!Purchase.ShopItem) continue;
@@ -59,7 +59,8 @@ TArray<FPurchaseData> UStatShopHistory::GetAllPurchasesInPeriod(TSubclassOf<USho
 
 FPurchaseSaveData UStatShopHistory::ToPurchaseSaveData(FPurchaseData PurchaseData)
 {
-	return FPurchaseSaveData(PurchaseData.ShopItem ? PurchaseData.ShopItem->Tag : NAME_None,
+	return FPurchaseSaveData(TSoftClassPtr<UShopItem>(PurchaseData.ShopItemClass),
+		PurchaseData.ShopItem ? PurchaseData.ShopItem->Tag : NAME_None,
 		PurchaseData.PurchaseTime,
 		PurchaseData.OperationType
 	);
@@ -67,25 +68,31 @@ FPurchaseSaveData UStatShopHistory::ToPurchaseSaveData(FPurchaseData PurchaseDat
 
 FPurchaseData UStatShopHistory::FromPurchaseSaveData(const FPurchaseSaveData PurchaseSaveData, const UObject* WorldContext)
 {
-	const UManagersSystem* ManagersSystem = UManagersSystem::Get(WorldContext);
-	if(!ManagersSystem) return FPurchaseData(nullptr,
-		PurchaseSaveData.PurchaseTime,
-		PurchaseSaveData.OperationType
-	);
+	const UManagersSystem* ManagersSystem = UManagersSystem::GetWithContext(WorldContext);
+	if(!ManagersSystem)
+	{
+		return FPurchaseData(UShopItem::StaticClass(),
+			nullptr,
+			PurchaseSaveData.PurchaseTime,
+			PurchaseSaveData.OperationType
+		);
+	}
 
 	const UDataManager* DataManager = ManagersSystem->GetManager<UDataManager>();
-	if(!DataManager) return FPurchaseData(nullptr,
+	if(!DataManager) return FPurchaseData(UShopItem::StaticClass(),
+		nullptr,
 		PurchaseSaveData.PurchaseTime,
 		PurchaseSaveData.OperationType
 	);
 	
-	return FPurchaseData(DataManager->GetDataAsset<UShopItemData>(PurchaseSaveData.ShopItemTag),
+	return FPurchaseData(PurchaseSaveData.ShopItemClass.LoadSynchronous(),
+		DataManager->GetDataAsset<UShopItemData>(PurchaseSaveData.ShopItemTag),
 		PurchaseSaveData.PurchaseTime,
 		PurchaseSaveData.OperationType
 	);
 }
 
-void UStatShopHistory::RecordPurchase(UShopItemData* ShopItem, TEnumAsByte<EOperationType> OperationType)
+void UStatShopHistory::RecordPurchase(UShopItem* ShopItem, TEnumAsByte<EOperationType> OperationType)
 {
-	Purchases.Add(ToPurchaseSaveData(FPurchaseData(ShopItem, FDateTime::UtcNow(), OperationType)));
+	Purchases.Add(ToPurchaseSaveData(FPurchaseData(ShopItem->GetClass(), ShopItem->GetShopData<UShopItemData>(), FDateTime::UtcNow(), OperationType)));
 }
