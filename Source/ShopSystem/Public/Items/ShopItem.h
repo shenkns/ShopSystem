@@ -95,7 +95,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
 	bool Refund();
 
+	UFUNCTION(BlueprintCallable, Category = "Shop")
 	void FinishPurchase(bool Result);
+	
 	bool ApplyPurchase();
 	bool RefundPurchase(bool ItemGiven);
 };
