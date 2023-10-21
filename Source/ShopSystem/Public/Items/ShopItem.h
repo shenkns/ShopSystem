@@ -77,6 +77,9 @@ public:
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Shop", meta = (CompactNodeTitle = "Price"))
 	int GetPrice() const;
 
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Shop", meta = (CompactNodeTitle = "PriceText"))
+	FText GetPriceText() const;
+	
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Shop")
 	bool CanBeBought() const;
 

@@ -45,6 +45,11 @@ FName UShopItem::GetTag() const
 	return ShopData ? ShopData->Tag : NAME_None;
 }
 
+FText UShopItem::GetPriceText_Implementation() const
+{
+	return ShopData ? FText::AsNumber(ShopData->Price) : FText();
+}
+
 UCurrencyData* UShopItem::GetCurrency_Implementation() const
 {
 	return ShopData ? ShopData->Currency : nullptr;
