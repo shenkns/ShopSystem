@@ -4,15 +4,15 @@
 
 #include "UObject/Object.h"
 
-#include "BackendPathGetter.generated.h"
+#include "StringObjectGetter.generated.h"
 
 UCLASS(Abstract, BlueprintType, Blueprintable)
-class SHOPSYSTEM_API UBackendPathGetter : public UObject
+class SHOPSYSTEM_API UStringObjectGetter : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Url")
-	FString GetBackendPathUrl() const;
+	FString GetString() const;
 };

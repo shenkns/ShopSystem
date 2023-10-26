@@ -1,13 +1,13 @@
 ﻿#include "Module/ShopSystemSettings.h"
 
-#include "Connection/BackendPathGetter.h"
+#include "Connection\StringObjectGetter.h"
 
 FString UShopSystemSettings::GetPurchaseVerificationUrl()
 {
 	UShopSystemSettings* Settings = GetMutableDefault<UShopSystemSettings>();
 	
-	const UBackendPathGetter* BackendPathGetter = NewObject<UBackendPathGetter>(Settings, Settings->BackendPurchaseVerificationPathGetterClass);
+	const UStringObjectGetter* BackendPathGetter = NewObject<UStringObjectGetter>(Settings, Settings->BackendPurchaseVerificationPathGetterClass);
 	if(!BackendPathGetter) return FString();
 
-	return BackendPathGetter->GetBackendPathUrl();
+	return BackendPathGetter->GetString();
 }

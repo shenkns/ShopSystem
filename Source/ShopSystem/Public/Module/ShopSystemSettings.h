@@ -6,7 +6,7 @@
 
 #include "ShopSystemSettings.generated.h"
 
-class UBackendPathGetter;
+class UStringObjectGetter;
 
 UCLASS(Config=Game, DefaultConfig)
 class SHOPSYSTEM_API UShopSystemSettings : public UObject
@@ -20,7 +20,7 @@ public:
 	bool bEnableBackendPurchaseVerification;
 
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend", meta = (EditCondition = "bEnableBackendPurchaseVerification"))
-	TSubclassOf<UBackendPathGetter> BackendPurchaseVerificationPathGetterClass;
+	TSubclassOf<UStringObjectGetter> BackendPurchaseVerificationPathGetterClass;
 
 	// Debug
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Debug")
