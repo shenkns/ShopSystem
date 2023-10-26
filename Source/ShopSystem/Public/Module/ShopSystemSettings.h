@@ -6,6 +6,8 @@
 
 #include "ShopSystemSettings.generated.h"
 
+class UBackendPathGetter;
+
 UCLASS(Config=Game, DefaultConfig)
 class SHOPSYSTEM_API UShopSystemSettings : public UObject
 {
@@ -18,9 +20,14 @@ public:
 	bool bEnableBackendPurchaseVerification;
 
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend", meta = (EditCondition = "bEnableBackendPurchaseVerification"))
-	FString BackendPurchaseVerificationUrl;
+	TSubclassOf<UBackendPathGetter> BackendPurchaseVerificationPathGetterClass;
 
 	// Debug
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Debug")
 	bool bShowDebugMessages;
+
+public:
+
+	UFUNCTION(BlueprintPure, Category = "Backend")
+	static FString GetPurchaseVerificationUrl();
 };
