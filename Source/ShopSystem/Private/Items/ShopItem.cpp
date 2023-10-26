@@ -111,7 +111,6 @@ bool UShopItem::Refund_Implementation()
 	return true;
 }
 
-
 bool UShopItem::CanBeBought_Implementation() const
 {
 	if(!ShopData) return false;
@@ -163,6 +162,14 @@ void UShopItem::VerifyPurchase_Implementation()
 void UShopItem::OnPurchaseVerified_Implementation(bool bSuccess)
 {
 	FinishPurchase(bSuccess);
+	
+	const UManagersSystem* ManagersSystem = GetManagersSystem();
+	if(!ManagersSystem) return;
+
+	UStatsManager* StatsManager = ManagersSystem->GetManager<UStatsManager>();
+	if(!StatsManager) return;
+	
+	StatsManager->SaveStats();
 }
 
 void UShopItem::FinishPurchase(bool Result)
