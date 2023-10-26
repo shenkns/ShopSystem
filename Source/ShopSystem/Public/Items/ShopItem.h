@@ -98,6 +98,12 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
 	bool Refund();
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
+	void VerifyPurchase();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
+	void OnPurchaseVerified(bool bSuccess);
+
 	UFUNCTION(BlueprintCallable, Category = "Shop")
 	void FinishPurchase(bool Result);
 	

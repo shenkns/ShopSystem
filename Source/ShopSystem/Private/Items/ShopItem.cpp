@@ -2,11 +2,15 @@
 
 #include "Items/ShopItem.h"
 
+#include "HttpManager.h"
+#include "HttpModule.h"
 #include "ManagersSystem.h"
 
 #include "Data/ShopItemData.h"
+#include "Interfaces/IHttpResponse.h"
 #include "Managers/ShopManager.h"
 #include "Managers/StatsManager.h"
+#include "Module/ShopSystemSettings.h"
 #include "Stats/CurrencyStat.h"
 
 UWorld* UShopItem::GetWorld() const
@@ -73,8 +77,20 @@ bool UShopItem::Buy_Implementation()
 
 	const bool bSuccess = !GetCurrency() || CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice());
 	
-	FinishPurchase(bSuccess);
+	if(bSuccess)
+	{
+		if(const UShopSystemSettings* Settings = GetDefault<UShopSystemSettings>())
+		{
+			if(Settings->bEnableBackendPurchaseVerification)
+			{
+				VerifyPurchase();
+				return true;
+			}
+		}
+	}
 
+	FinishPurchase(bSuccess);
+	
 	StatsManager->SaveStats();
 
 	return bSuccess;
@@ -110,6 +126,43 @@ bool UShopItem::CanBeBought_Implementation() const
 	if(!CurrencyStat) return false;
 
 	return CurrencyStat->HasCurrency(GetCurrency(), GetPrice());
+}
+
+void UShopItem::VerifyPurchase_Implementation()
+{
+	FHttpModule& HttpModule = FHttpModule::Get();
+	
+	const TSharedRef<IHttpRequest, ESPMode::ThreadSafe> VerificationRequest = HttpModule.CreateRequest();
+	VerificationRequest->SetURL(UShopSystemSettings::GetPurchaseVerificationUrl());
+	VerificationRequest->SetVerb(FString("POST"));
+
+	VerificationRequest->SetHeader(FString("Authorization"),
+		FString::Printf(TEXT("Bearer %s"), *UShopSystemSettings::GetBackendAuthToken())
+	);
+
+	const TSharedPtr<FJsonObject> RequestContent = MakeShareable(new FJsonObject);
+	RequestContent->SetStringField(FString("tag"), GetShopData<UShopItemData>()->Tag.ToString());
+	
+	FString OutputString;
+	const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&OutputString);
+	FJsonSerializer::Serialize(RequestContent.ToSharedRef(), Writer);
+
+	VerificationRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	VerificationRequest->SetContentAsString(OutputString);
+
+	VerificationRequest->OnProcessRequestComplete().BindWeakLambda(this, [this](FHttpRequestPtr Request,
+			FHttpResponsePtr Response,
+			bool bConnectedSuccessfully)
+	{
+		OnPurchaseVerified(Response.Get()->GetResponseCode() == 200);
+	});
+
+	VerificationRequest->ProcessRequest();
+}
+
+void UShopItem::OnPurchaseVerified_Implementation(bool bSuccess)
+{
+	FinishPurchase(bSuccess);
 }
 
 void UShopItem::FinishPurchase(bool Result)

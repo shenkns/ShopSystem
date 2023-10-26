@@ -31,7 +31,10 @@ public class ShopSystem : ModuleRules
 				"SaveLoadSystem",
 				"DataSystem",
 				"CurrenciesSystem",
-				"SerializationSystem"
+				"SerializationSystem",
+				"HTTP",
+				"Json",
+				"JsonUtilities"
 			}
 		);
 		
