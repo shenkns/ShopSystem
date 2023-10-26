@@ -13,6 +13,13 @@ class SHOPSYSTEM_API UShopSystemSettings : public UObject
 
 public:
 
+	// Backend verification
+	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend")
+	bool bEnableBackendPurchaseVerification;
+
+	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend", meta = (EditCondition = "bEnableBackendPurchaseVerification"))
+	FString BackendPurchaseVerificationUrl;
+
 	// Debug
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Debug")
 	bool bShowDebugMessages;
