@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend", meta = (EditCondition = "bEnableBackendPurchaseVerification"))
 	TSubclassOf<UStringObjectGetter> BackendPurchaseVerificationPathGetterClass;
 
+	UPROPERTY(EditDefaultsOnly, Config, Category = "Backend", meta = (EditCondition = "bEnableBackendPurchaseVerification"))
+	TSubclassOf<UStringObjectGetter> BackendAuthTokenGetterClass;
+
 	// Debug
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Debug")
 	bool bShowDebugMessages;
@@ -30,4 +33,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Backend")
 	static FString GetPurchaseVerificationUrl();
+
+	UFUNCTION(BlueprintPure, Category = "Backend")
+	static FString GetBackendAuthToken();
 };
