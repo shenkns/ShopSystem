@@ -127,7 +127,7 @@ bool UShopItem::CanBeBought_Implementation() const
 	return CurrencyStat->HasCurrency(GetCurrency(), GetPrice());
 }
 
-void UShopItem::VerifyPurchase_Implementation()
+void UShopItem::VerifyPurchase_Implementation(const FString& TransactionID)
 {
 	FHttpModule& HttpModule = FHttpModule::Get();
 	

@@ -99,7 +99,7 @@ protected:
 	bool Refund();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
-	void VerifyPurchase();
+	void VerifyPurchase(const FString& TransactionID = "");
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
 	void OnPurchaseVerified(bool bSuccess);
