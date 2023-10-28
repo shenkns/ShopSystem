@@ -7,8 +7,7 @@
 #include "VaRestRequestJSON.h"
 #include "VaRestTypes.h"
 #include "VaRestJsonObject.h"
-#include "VaRestJsonValue.h"
-
+#include "Widgets/PurchaseWidget.h"
 #include "Data/ShopItemData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Managers/ShopManager.h"
@@ -259,7 +258,7 @@ void UShopItem::OpenPurchaseWidget()
 
 void UShopItem::ClosePurchaseWidget()
 {
-	UWidgetsSystemLibrary::GetWidgetManager()->Lock(true);
+	UWidgetsSystemLibrary::GetWidgetManager()->Lock(false);
 	
 	if(PurchaseWidget)
 	{

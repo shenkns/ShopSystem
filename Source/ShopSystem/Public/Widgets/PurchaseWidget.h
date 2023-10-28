@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Blueprint/UserWidget.h"
+#include "UMG/Public/Blueprint/UserWidget.h"
 
 #include "PurchaseWidget.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class SHOPSYSTEM_API UPurchaseWidget : public UUserWidget
 {
 	GENERATED_BODY()

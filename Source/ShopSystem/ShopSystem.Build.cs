@@ -17,7 +17,10 @@ public class ShopSystem : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core"
+				"Core",
+				"Slate",
+				"SlateCore",
+				"UMG"
 			}
 		);
 
@@ -33,7 +36,6 @@ public class ShopSystem : ModuleRules
 				"CurrenciesSystem",
 				"SerializationSystem",
 				"VaRest",
-				"UMG",
 				"WidgetsSystem"
 			}
 		);

@@ -4,8 +4,6 @@
 
 #include "UObject/Object.h"
 
-#include "Widgets/PurchaseWidget.h"
-
 #include "ShopSystemSettings.generated.h"
 
 class UStringObjectGetter;
@@ -32,7 +30,7 @@ public:
 	bool bShowDebugMessages;
 
 	UPROPERTY(EditDefaultsOnly, Config, Category = "Debug")
-	TSubclassOf<UPurchaseWidget> PurchaseWidgetClass = UPurchaseWidget::StaticClass();
+	TSubclassOf<UPurchaseWidget> PurchaseWidgetClass;
 
 public:
 
