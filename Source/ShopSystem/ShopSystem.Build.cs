@@ -32,9 +32,7 @@ public class ShopSystem : ModuleRules
 				"DataSystem",
 				"CurrenciesSystem",
 				"SerializationSystem",
-				"HTTP",
-				"Json",
-				"JsonUtilities"
+				"VaRest"
 			}
 		);
 		
@@ -46,7 +44,8 @@ public class ShopSystem : ModuleRules
 				"SaveLoadSystem",
 				"DataSystem",
 				"CurrenciesSystem",
-				"SerializationSystem"
+				"SerializationSystem",
+				"VaRest"
 			}
 		);
 	}

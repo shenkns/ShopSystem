@@ -2,12 +2,14 @@
 
 #include "Items/ShopItem.h"
 
-#include "HttpManager.h"
-#include "HttpModule.h"
 #include "ManagersSystem.h"
+#include "VaRestSubsystem.h"
+#include "VaRestRequestJSON.h"
+#include "VaRestTypes.h"
+#include "VaRestJsonObject.h"
+#include "VaRestJsonValue.h"
 
 #include "Data/ShopItemData.h"
-#include "Interfaces/IHttpResponse.h"
 #include "Managers/ShopManager.h"
 #include "Managers/StatsManager.h"
 #include "Module/ShopSystemSettings.h"
@@ -129,39 +131,29 @@ bool UShopItem::CanBeBought_Implementation() const
 
 void UShopItem::VerifyPurchase_Implementation(const FString& TransactionID)
 {
-	FHttpModule& HttpModule = FHttpModule::Get();
-	
-	const TSharedRef<IHttpRequest, ESPMode::ThreadSafe> VerificationRequest = HttpModule.CreateRequest();
-	VerificationRequest->SetURL(UShopSystemSettings::GetPurchaseVerificationUrl());
-	VerificationRequest->SetVerb(FString("POST"));
+	UVaRestSubsystem* VaRest = GetVaRest();
+	if(!VaRest) FinishPurchase(false);
 
-	VerificationRequest->SetHeader(FString("Authorization"),
+	UVaRestRequestJSON* Request = VaRest->ConstructVaRestRequest();
+	if(!Request) FinishPurchase(false);
+
+	Request->SetVerb(EVaRestRequestVerb::POST);
+	Request->SetContentType(EVaRestRequestContentType::json);
+	
+	Request->SetHeader(FString("Authorization"),
 		FString::Printf(TEXT("Bearer %s"), *UShopSystemSettings::GetBackendAuthToken())
 	);
-
-	const TSharedPtr<FJsonObject> RequestContent = MakeShareable(new FJsonObject);
-	RequestContent->SetStringField(FString("tag"), GetShopData<UShopItemData>()->Tag.ToString());
 	
-	FString OutputString;
-	const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&OutputString);
-	FJsonSerializer::Serialize(RequestContent.ToSharedRef(), Writer);
-
-	VerificationRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-	VerificationRequest->SetContentAsString(OutputString);
-
-	VerificationRequest->OnProcessRequestComplete().BindWeakLambda(this, [this](FHttpRequestPtr Request,
-			FHttpResponsePtr Response,
-			bool bConnectedSuccessfully)
-	{
-		OnPurchaseVerified(Response.Get()->GetResponseCode() == 200);
-	});
-
-	VerificationRequest->ProcessRequest();
+	Request->GetRequestObject()->SetStringField(FString("tag"), GetShopData<UShopItemData>()->Tag.ToString());
+	
+	Request->OnRequestComplete.AddUniqueDynamic(this, &UShopItem::OnPurchaseVerified);
+	
+	Request->ProcessURL(UShopSystemSettings::GetPurchaseVerificationUrl());
 }
 
-void UShopItem::OnPurchaseVerified_Implementation(bool bSuccess)
+void UShopItem::OnPurchaseVerified_Implementation(UVaRestRequestJSON* Request)
 {
-	FinishPurchase(bSuccess);
+	FinishPurchase(Request->GetResponseCode() == 200);
 	
 	const UManagersSystem* ManagersSystem = GetManagersSystem();
 	if(!ManagersSystem) return;
@@ -240,4 +232,11 @@ bool UShopItem::RefundPurchase(bool ItemGiven)
 	}
 
 	return Result;
+}
+
+UVaRestSubsystem* UShopItem::GetVaRest() const
+{
+	if(!GEngine) return nullptr;
+
+	return GEngine->GetEngineSubsystem<UVaRestSubsystem>();
 }

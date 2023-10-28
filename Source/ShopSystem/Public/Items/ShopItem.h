@@ -11,6 +11,7 @@ class UShopManager;
 class UShopItemData;
 class UShopItem;
 class UCurrencyData;
+class UVaRestSubsystem;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemPurchaseEvent, UShopItem*, Item);
 
@@ -102,13 +103,15 @@ protected:
 	void VerifyPurchase(const FString& TransactionID = "");
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Shop")
-	void OnPurchaseVerified(bool bSuccess);
+	void OnPurchaseVerified(UVaRestRequestJSON* Request);
 
 	UFUNCTION(BlueprintCallable, Category = "Shop")
 	void FinishPurchase(bool Result);
 	
 	bool ApplyPurchase();
 	bool RefundPurchase(bool ItemGiven);
+
+	UVaRestSubsystem* GetVaRest() const;
 };
 
 template <typename T>
