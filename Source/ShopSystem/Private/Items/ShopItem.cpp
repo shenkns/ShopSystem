@@ -10,6 +10,7 @@
 #include "VaRestJsonValue.h"
 
 #include "Data/ShopItemData.h"
+#include "Kismet/GameplayStatics.h"
 #include "Managers/ShopManager.h"
 #include "Managers/StatsManager.h"
 #include "Module/ShopSystemSettings.h"
@@ -85,7 +86,10 @@ bool UShopItem::Buy_Implementation()
 		{
 			if(Settings->bEnableBackendPurchaseVerification)
 			{
+				OpenPurchaseWidget();
+				
 				VerifyPurchase();
+				
 				return true;
 			}
 		}
@@ -100,7 +104,7 @@ bool UShopItem::Buy_Implementation()
 
 void UShopItem::Finish_Implementation()
 {
-	return;
+	ClosePurchaseWidget();
 }
 
 bool UShopItem::Apply_Implementation()
@@ -239,4 +243,21 @@ UVaRestSubsystem* UShopItem::GetVaRest() const
 	if(!GEngine) return nullptr;
 
 	return GEngine->GetEngineSubsystem<UVaRestSubsystem>();
+}
+
+void UShopItem::OpenPurchaseWidget()
+{
+	PurchaseWidget = CreateWidget<UPurchaseWidget>(UGameplayStatics::GetPlayerController(this, 0),
+		GetDefault<UShopSystemSettings>()->PurchaseWidgetClass
+	);
+	
+	PurchaseWidget->Show();
+}
+
+void UShopItem::ClosePurchaseWidget()
+{
+	if(PurchaseWidget)
+	{
+		PurchaseWidget->Hide();
+	}
 }

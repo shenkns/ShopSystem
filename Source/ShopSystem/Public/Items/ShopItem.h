@@ -12,6 +12,7 @@ class UShopItemData;
 class UShopItem;
 class UCurrencyData;
 class UVaRestSubsystem;
+class UPurchaseWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemPurchaseEvent, UShopItem*, Item);
 
@@ -43,6 +44,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop", meta = (ExposeOnSpawn = true))
 	FString UniqueID;
+
+private:
+
+	UPROPERTY()
+	UPurchaseWidget* PurchaseWidget;
 
 public:
 
@@ -112,6 +118,9 @@ protected:
 	bool RefundPurchase(bool ItemGiven);
 
 	UVaRestSubsystem* GetVaRest() const;
+
+	void OpenPurchaseWidget();
+	void ClosePurchaseWidget();
 };
 
 template <typename T>

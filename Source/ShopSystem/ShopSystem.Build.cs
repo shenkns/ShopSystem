@@ -32,7 +32,8 @@ public class ShopSystem : ModuleRules
 				"DataSystem",
 				"CurrenciesSystem",
 				"SerializationSystem",
-				"VaRest"
+				"VaRest",
+				"UMG"
 			}
 		);
 		
