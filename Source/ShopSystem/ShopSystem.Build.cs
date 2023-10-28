@@ -33,7 +33,8 @@ public class ShopSystem : ModuleRules
 				"CurrenciesSystem",
 				"SerializationSystem",
 				"VaRest",
-				"UMG"
+				"UMG",
+				"WidgetsSystem"
 			}
 		);
 		
@@ -46,7 +47,8 @@ public class ShopSystem : ModuleRules
 				"DataSystem",
 				"CurrenciesSystem",
 				"SerializationSystem",
-				"VaRest"
+				"VaRest",
+				"WidgetsSystem"
 			}
 		);
 	}

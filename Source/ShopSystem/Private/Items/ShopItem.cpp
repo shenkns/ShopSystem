@@ -15,6 +15,7 @@
 #include "Managers/StatsManager.h"
 #include "Module/ShopSystemSettings.h"
 #include "Stats/CurrencyStat.h"
+#include "WidgetsSystem/Libs/WidgetsSystemLibrary.h"
 
 UWorld* UShopItem::GetWorld() const
 {
@@ -247,6 +248,8 @@ UVaRestSubsystem* UShopItem::GetVaRest() const
 
 void UShopItem::OpenPurchaseWidget()
 {
+	UWidgetsSystemLibrary::GetWidgetManager()->Lock(true);
+	
 	PurchaseWidget = CreateWidget<UPurchaseWidget>(UGameplayStatics::GetPlayerController(this, 0),
 		GetDefault<UShopSystemSettings>()->PurchaseWidgetClass
 	);
@@ -256,8 +259,12 @@ void UShopItem::OpenPurchaseWidget()
 
 void UShopItem::ClosePurchaseWidget()
 {
+	UWidgetsSystemLibrary::GetWidgetManager()->Lock(true);
+	
 	if(PurchaseWidget)
 	{
 		PurchaseWidget->Hide();
+
+		PurchaseWidget = nullptr;
 	}
 }

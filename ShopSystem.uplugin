@@ -46,6 +46,10 @@
 		{
 			"Name": "VaRest",
 			"Enabled": true
+		},
+		{
+			"Name": "WidgetsSystem",
+			"Enabled": true
 		}
 	]
 }
