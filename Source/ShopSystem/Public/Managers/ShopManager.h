@@ -64,6 +64,8 @@ protected:
 	UPROPERTY()
 	TMap<UShopCategoryData*, FShopItemsSaveDataList> ItemsSaveData;
 
+	bool PurchaseInProgress;
+
 public:
 
 	virtual void InitManager() override;

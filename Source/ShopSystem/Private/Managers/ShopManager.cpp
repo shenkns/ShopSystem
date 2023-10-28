@@ -70,12 +70,16 @@ void UShopManager::ValidateAllowedItemsInCategories()
 
 bool UShopManager::BuyItem(UShopItem* Item)
 {
+	if(PurchaseInProgress) return false;
+	
 	if(!Item) return false;
 
 	const bool Result = Item->CanBeBought();
 	// Try Buy
 	if(Result)
 	{
+		PurchaseInProgress = true;
+		
 		// Bind Item Delegates
 		Item->OnItemBought.AddUniqueDynamic(this, &UShopManager::ProcessPurchaseBought);
 		Item->OnItemBuyFailed.AddUniqueDynamic(this, &UShopManager::ProcessPurchaseFailed);
@@ -83,6 +87,7 @@ bool UShopManager::BuyItem(UShopItem* Item)
 		Item->OnItemRefunded.AddUniqueDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 
 		DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "Try To Buy %s", *Item->GetName())
+
 		
 		Item->Buy();
 	}
@@ -233,6 +238,8 @@ void UShopManager::ProcessPurchaseBought(UShopItem* Item)
 	Item->OnItemRefunded.RemoveDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 
 	OnItemBought.Broadcast(Item);
+
+	PurchaseInProgress = false;
 }
 
 void UShopManager::ProcessPurchaseFailed(UShopItem* Item)
@@ -244,6 +251,8 @@ void UShopManager::ProcessPurchaseFailed(UShopItem* Item)
 	Item->OnItemRefunded.RemoveDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 
 	OnItemBuyFailed.Broadcast(Item);
+
+	PurchaseInProgress = false;
 }
 
 void UShopManager::ProcessPurchaseApplied(UShopItem* Item)

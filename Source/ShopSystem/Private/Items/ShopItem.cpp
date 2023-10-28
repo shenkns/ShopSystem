@@ -78,6 +78,8 @@ bool UShopItem::Buy_Implementation()
 	UCurrencyStat* CurrencyStat = StatsManager->GetStat<UCurrencyStat>();
 	if(!CurrencyStat) return false;
 
+	OpenPurchaseWidget();
+
 	const bool bSuccess = !GetCurrency() || CurrencyStat->ChangeCurrency(GetCurrency(), -GetPrice());
 	
 	if(bSuccess)
@@ -86,8 +88,6 @@ bool UShopItem::Buy_Implementation()
 		{
 			if(Settings->bEnableBackendPurchaseVerification)
 			{
-				OpenPurchaseWidget();
-				
 				VerifyPurchase();
 				
 				return true;
@@ -104,7 +104,7 @@ bool UShopItem::Buy_Implementation()
 
 void UShopItem::Finish_Implementation()
 {
-	ClosePurchaseWidget();
+	return;
 }
 
 bool UShopItem::Apply_Implementation()
@@ -182,12 +182,16 @@ void UShopItem::FinishPurchase(bool Result)
 
 		Finish();
 
+		ClosePurchaseWidget();
+
 		return;
 	}
 	
 	OnItemBuyFailed.Broadcast(this);
 
 	Finish();
+
+	ClosePurchaseWidget();
 }
 
 bool UShopItem::ApplyPurchase()
