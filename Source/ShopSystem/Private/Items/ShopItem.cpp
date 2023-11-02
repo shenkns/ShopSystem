@@ -174,6 +174,8 @@ void UShopItem::FinishPurchase(bool Result)
 	if(Result)
 	{
 		const bool ApplyResult = ApplyPurchase();
+
+		ClosePurchaseWidget();
 		
 		if(ApplyResult)
 		{
@@ -182,16 +184,14 @@ void UShopItem::FinishPurchase(bool Result)
 
 		Finish();
 
-		ClosePurchaseWidget();
-
 		return;
 	}
+
+	ClosePurchaseWidget();
 	
 	OnItemBuyFailed.Broadcast(this);
 
 	Finish();
-
-	ClosePurchaseWidget();
 }
 
 bool UShopItem::ApplyPurchase()
