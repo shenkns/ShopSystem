@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shop")
 	int Price;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shop|Verification")
+	bool bSkipPurchaseVerification;
 };

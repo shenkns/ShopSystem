@@ -86,7 +86,7 @@ bool UShopItem::Buy_Implementation()
 	{
 		if(const UShopSystemSettings* Settings = GetDefault<UShopSystemSettings>())
 		{
-			if(Settings->bEnableBackendPurchaseVerification)
+			if(Settings->bEnableBackendPurchaseVerification && !GetShopData<UShopItemData>()->bSkipPurchaseVerification)
 			{
 				VerifyPurchase();
 				
