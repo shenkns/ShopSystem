@@ -5,9 +5,10 @@
 #include "ManagersSystem.h"
 #include "Data/ShopCategoryData.h"
 #include "Managers/StatsManager.h"
-#include "Module/ShopSystemSettings.h"
 #include "Module/ShopSystemModule.h"
 #include "Stats/StatShopHistory.h"
+
+DEFINE_LOG_CATEGORY_LOCAL(LogShopSystem);
 
 void UShopManager::InitManager()
 {
@@ -86,8 +87,7 @@ bool UShopManager::BuyItem(UShopItem* Item)
 		Item->OnItemApplied.AddUniqueDynamic(this, &UShopManager::ProcessPurchaseApplied);
 		Item->OnItemRefunded.AddUniqueDynamic(this, &UShopManager::ProcessPurchaseRefunded);
 
-		DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "Try To Buy %s", *Item->GetName())
-
+		LOG(Display, "Try To Buy {}", Item);
 		
 		Item->Buy();
 	}
@@ -108,7 +108,7 @@ bool UShopManager::AddItemToCategory(UShopItem* Item, UShopCategoryData* Categor
 	Item->Init();
 	CategoryItems.Items.Add(Item);
 
-	DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "%s Added To %s", *Item->GetName(), *Category->GetName())
+	LOG(Display, "{} Added To {}", Item, Category->Tag);
 
 	OnCategoryUpdate.Broadcast(Category);
 
@@ -128,7 +128,7 @@ bool UShopManager::RemoveItem(UShopItem* Item)
 		{
 			Removed = true;
 
-			DEBUG_MESSAGE(GetDefault<UShopSystemSettings>()->bShowDebugMessages, LogShopSystem, "%s Removed From %s", *Item->GetName(), *Pair.Key->GetName())
+			LOG(Display, "{} Removed From {}", Item, Pair.Key->Tag);
 			
 			OnCategoryUpdate.Broadcast(Pair.Key);
 		}
